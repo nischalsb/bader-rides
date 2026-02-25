@@ -47,9 +47,9 @@ function getSeatsLeft(r) { return r.totalSeats - r.takenSeats; }
 function BackgroundOrbs() {
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-cardinal/8 blur-[120px] animate-float" />
-      <div className="absolute top-1/3 -left-32 w-80 h-80 rounded-full bg-accent-blue/6 blur-[100px] animate-float-slow" />
-      <div className="absolute bottom-20 right-1/4 w-64 h-64 rounded-full bg-cardinal/5 blur-[80px] animate-pulse-glow" />
+      <div className="absolute -top-[20%] -right-[10%] w-[700px] h-[700px] rounded-full bg-cardinal/[0.03] blur-[180px] animate-float" />
+      <div className="absolute top-[30%] -left-[15%] w-[600px] h-[600px] rounded-full bg-accent-blue/[0.03] blur-[160px] animate-float-slow" />
+      <div className="absolute -bottom-[10%] right-[15%] w-[500px] h-[500px] rounded-full bg-cardinal/[0.02] blur-[150px] animate-pulse-glow" />
     </div>
   );
 }
@@ -253,7 +253,7 @@ function Navbar({ activeTab, setActiveTab }) {
           </div>
         </div>
       </nav>
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-nav" style={{ borderBottom: "none", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-nav" style={{ borderBottom: "none", borderTop: "1px solid rgba(0,0,0,0.06)" }}>
         <div className="flex justify-around py-1.5 px-2">
           {tabs.map((t) => (
             <button key={t.id} onClick={() => setActiveTab(t.id)}
@@ -288,14 +288,14 @@ function RideCard({ ride, onRequest, index = 0 }) {
         </div>
         <div className="flex items-center gap-2">
           {isOwn && <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-accent-blue/10 text-accent-blue border border-accent-blue/20">You</span>}
-          {isFull && <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-white/5 text-text-tertiary border border-border-subtle">Full</span>}
+          {isFull && <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-surface-hover text-text-tertiary border border-border-subtle">Full</span>}
           {hasJoined && !isFull && <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-accent-green/10 text-accent-green border border-accent-green/20">Joined</span>}
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-cardinal/10 text-cardinal-light border border-cardinal/15">{ride.destination}</span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-white/4 text-text-secondary border border-border-subtle">{formatDate(ride.date)}</span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-white/4 text-text-secondary border border-border-subtle">{formatTime(ride.time)}</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-surface-hover text-text-secondary border border-border-subtle">{formatDate(ride.date)}</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-surface-hover text-text-secondary border border-border-subtle">{formatTime(ride.time)}</span>
       </div>
       <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -443,7 +443,7 @@ function MyRides() {
   }, []);
 
   const StatusBadge = ({ ride }) => {
-    if (ride.status === "full" || getSeatsLeft(ride) <= 0) return <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-white/5 text-text-tertiary border border-border-subtle">Full</span>;
+    if (ride.status === "full" || getSeatsLeft(ride) <= 0) return <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-surface-hover text-text-tertiary border border-border-subtle">Full</span>;
     if (ride.riders?.includes(user.id) || ride.driverId === user.id) return <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-accent-green/10 text-accent-green border border-accent-green/20">Confirmed</span>;
     return <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-accent-yellow/10 text-accent-yellow border border-accent-yellow/20">Pending</span>;
   };
@@ -555,7 +555,7 @@ function Messages({ socket }) {
               {conversations.map((c) => {
                 const isActive = activeConvo === c.id;
                 return (
-                  <button key={c.id} onClick={() => selectConvo(c.id)} className={`w-full flex items-center gap-3 px-4 py-3.5 text-left transition-all duration-200 ${isActive ? "bg-white/5 border-l-2 border-cardinal" : "hover:bg-white/3 border-l-2 border-transparent"}`}>
+                  <button key={c.id} onClick={() => selectConvo(c.id)} className={`w-full flex items-center gap-3 px-4 py-3.5 text-left transition-all duration-200 ${isActive ? "bg-cardinal/5 border-l-2 border-cardinal" : "hover:bg-surface-hover border-l-2 border-transparent"}`}>
                     <Avatar initials={c.with?.avatar || "?"} size="sm" glow={isActive} />
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-baseline">
@@ -582,7 +582,7 @@ function Messages({ socket }) {
                     const isMe = m.from === user.id;
                     return (
                       <div key={m.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-                        <div className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed ${isMe ? "bg-cardinal text-white rounded-2xl rounded-br-lg" : "glass-light rounded-2xl rounded-bl-lg text-text-primary"}`}>
+                        <div className={`max-w-[75%] px-4 py-3 text-sm leading-relaxed ${isMe ? "bg-cardinal text-white rounded-2xl rounded-br-lg" : "bg-surface-hover rounded-2xl rounded-bl-lg text-text-primary"}`}>
                           <p>{m.text}</p>
                           <p className={`text-[10px] mt-1.5 ${isMe ? "text-white/40" : "text-text-tertiary"}`}>{formatTimestamp(m.ts)}</p>
                         </div>
@@ -656,8 +656,8 @@ function Matching({ onRequest }) {
                     </div>
                     <div className="flex flex-wrap gap-2 mb-4">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-cardinal/10 text-cardinal-light border border-cardinal/15">{r.destination}</span>
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-white/4 text-text-secondary border border-border-subtle">{formatDate(r.date)} &middot; {formatTime(r.time)}</span>
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-white/4 text-text-secondary border border-border-subtle">{r.seatsLeft || getSeatsLeft(r)} seats</span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-surface-hover text-text-secondary border border-border-subtle">{formatDate(r.date)} &middot; {formatTime(r.time)}</span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-surface-hover text-text-secondary border border-border-subtle">{r.seatsLeft || getSeatsLeft(r)} seats</span>
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-accent-green/10 text-accent-green border border-accent-green/20">${r.price}</span>
                     </div>
                     <button onClick={() => onRequest(r.id)} className="btn-glow w-full py-3 bg-cardinal text-white text-sm font-bold rounded-xl">Join this ride</button>
