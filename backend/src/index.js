@@ -51,7 +51,7 @@ app.use(errorHandler);
 
 // Start
 const PORT = process.env.PORT || 3001;
-httpServer.listen(PORT, () => {
-  console.log(`\n  🦡 BadgerRides API running on http://localhost:${PORT}`);
-  console.log(`  📡 Socket.IO ready\n`);
+httpServer.listen(PORT, "0.0.0.0", () => {
+  console.log(`\n  BadgerRides API running on port ${PORT}`);
+  console.log(`  Socket.IO ready\n`);
 });

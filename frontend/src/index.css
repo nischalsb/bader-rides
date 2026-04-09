@@ -66,10 +66,13 @@ body::before {
 }
 
 .glass-nav {
-  background: rgba(247, 246, 243, 0.85);
+  background: rgba(247, 246, 243, 0.85) !important;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
 }
 
 /* ── Animations ─────────────────────── */
@@ -221,3 +224,65 @@ input, select, textarea {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* ── Bootstrap overrides ──────────── */
+.btn {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.btn:focus, .btn:focus-visible,
+.form-control:focus,
+.form-select:focus {
+  box-shadow: 0 0 0 3px rgba(197, 5, 12, 0.08) !important;
+  border-color: rgba(197, 5, 12, 0.4) !important;
+}
+
+.btn-link { text-decoration: none !important; }
+
+.form-control, .form-select {
+  border: none !important;
+}
+
+.navbar {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.navbar .container-fluid {
+  padding: 0;
+}
+
+.nav-link {
+  text-decoration: none !important;
+}
+
+a { text-decoration: none !important; }
+
+.badge {
+  font-weight: inherit !important;
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+.modal-header { border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important; }
+.modal-footer { border-top: 1px solid rgba(0, 0, 0, 0.06) !important; }
+
+.toast-container { position: fixed !important; }
+
+.toast {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  border-radius: 1rem !important;
+}
+
+.spinner-border { width: 1rem; height: 1rem; border-width: 2px; }
