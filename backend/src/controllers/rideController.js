@@ -2,13 +2,24 @@ import prisma from "../prismaClient.js";
 import { enrichRide, enrichMany, rideIncludes } from "../services/rideService.js";
 import { findMatches } from "../services/matchingService.js";
 
+// Rides are stored at midnight-UTC of their calendar day. Comparing to
+// `new Date()` hides rides for "today" as soon as UTC rolls past midnight,
+// which in CDT happens at 7 PM the day before the ride. Use start-of-yesterday
+// UTC as the cutoff — 24h buffer covers any reasonable timezone.
+function pastCutoffUTC() {
+  const d = new Date();
+  d.setUTCHours(0, 0, 0, 0);
+  d.setUTCDate(d.getUTCDate() - 1);
+  return d;
+}
+
 export async function listRides(req, res, next) {
   try {
     const { destination, date, minSeats, search } = req.query;
 
     const where = {
       status: { not: "cancelled" },
-      date: { gte: new Date() },
+      date: { gte: pastCutoffUTC() },
     };
 
     if (destination) where.destination = destination;
