@@ -13,6 +13,9 @@ import { initSocket } from "./socket.js";
 const app = express();
 const httpServer = createServer(app);
 
+// Required so express-rate-limit + req.ip work correctly behind Railway/Vercel proxies.
+app.set("trust proxy", 1);
+
 // Socket.IO
 const io = initSocket(httpServer);
 app.set("io", io);
