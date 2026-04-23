@@ -13,6 +13,8 @@ import AppToasts from "./components/AppToasts";
 import AppNavbar from "./components/AppNavbar";
 
 import AuthPage from "./pages/AuthPage";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import BrowseRides from "./pages/BrowseRides";
 import PostRide from "./pages/PostRide";
 import MyRides from "./pages/MyRides";
@@ -80,7 +82,14 @@ export default function App() {
     return (
       <BrowserRouter>
         <AppToasts toasts={toasts} removeToast={removeToast} />
-        <AuthPage onAuth={setUser} addToast={addToast} />
+        <Routes>
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/reset-password"
+            element={<ResetPassword addToast={addToast} />}
+          />
+          <Route path="*" element={<AuthPage onAuth={setUser} addToast={addToast} />} />
+        </Routes>
       </BrowserRouter>
     );
   }
