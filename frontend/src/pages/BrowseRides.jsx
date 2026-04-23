@@ -1,30 +1,17 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
-import { api } from "../utils/api";
 import { getSeatsLeft } from "../utils/format";
 import { DESTINATIONS } from "../utils/constants";
 import RideCard from "../components/RideCard";
 
-export default function BrowseRides({ onRequest }) {
-  const [rides, setRides] = useState([]);
+export default function BrowseRides({ rides, loading, onRequest }) {
   const [search, setSearch] = useState("");
   const [destFilter, setDestFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [seatsFilter, setSeatsFilter] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const fetchRides = useCallback(async () => {
-    try {
-      const data = await api("/api/rides");
-      setRides(data.rides);
-    } catch { /* toast handled upstream */ }
-    finally { setLoading(false); }
-  }, []);
-
-  useEffect(() => { fetchRides(); }, [fetchRides]);
 
   const filtered = rides.filter((r) => {
     if (destFilter && r.destination !== destFilter) return false;
@@ -37,11 +24,6 @@ export default function BrowseRides({ onRequest }) {
     return true;
   });
   const openRides = rides.filter((r) => getSeatsLeft(r) > 0).length;
-
-  const handleJoin = async (id) => {
-    await onRequest(id);
-    fetchRides();
-  };
 
   return (
     <div className="fade-in">
@@ -95,7 +77,7 @@ export default function BrowseRides({ onRequest }) {
             <p className="font-medium text-text-secondary">{rides.length === 0 ? "No rides posted yet" : "No rides match your filters"}</p>
             <p className="text-sm text-text-tertiary mt-1">{rides.length === 0 ? "Be the first — post a ride and get the ball rolling!" : "Try adjusting your search or filters"}</p>
           </div>
-        ) : filtered.map((r, i) => <RideCard key={r.id} ride={r} onRequest={handleJoin} index={i} />)}
+        ) : filtered.map((r, i) => <RideCard key={r.id} ride={r} onRequest={onRequest} index={i} />)}
       </div>
     </div>
   );

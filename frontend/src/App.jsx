@@ -6,6 +6,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { AuthContext, UserContext } from "./contexts";
 import { API_BASE, api } from "./utils/api";
 import { useToast } from "./hooks/useToast";
+import { useAppData } from "./hooks/useAppData";
 
 import BackgroundOrbs from "./components/BackgroundOrbs";
 import AppToasts from "./components/AppToasts";
@@ -23,6 +24,7 @@ export default function App() {
   const [checking, setChecking] = useState(true);
   const [socket, setSocket] = useState(null);
   const { toasts, addToast, removeToast } = useToast();
+  const data = useAppData(user);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -52,15 +54,18 @@ export default function App() {
 
   const handleRequestJoin = useCallback(async (rideId) => {
     try {
-      const data = await api(`/api/rides/${rideId}/join`, { method: "POST" });
+      const d = await api(`/api/rides/${rideId}/join`, { method: "POST" });
       addToast("You're in! The driver has been notified.");
-      if (data.conversationId && socket) {
-        socket.emit("join-conversation", data.conversationId);
+      if (d.conversationId && socket) {
+        socket.emit("join-conversation", d.conversationId);
       }
+      data.refreshRides();
+      data.refreshMyRides();
+      data.refreshConversations();
     } catch (err) {
       addToast(err.message, "error");
     }
-  }, [addToast, socket]);
+  }, [addToast, socket, data]);
 
   if (checking) {
     return (
@@ -89,7 +94,12 @@ export default function App() {
             <AppNavbar />
             <AppToasts toasts={toasts} removeToast={removeToast} />
             <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-8 pb-28 md:pb-8">
-              <AppRoutes socket={socket} onRequest={handleRequestJoin} addToast={addToast} />
+              <AppRoutes
+                socket={socket}
+                onRequest={handleRequestJoin}
+                addToast={addToast}
+                data={data}
+              />
             </main>
           </div>
         </UserContext.Provider>
@@ -98,25 +108,45 @@ export default function App() {
   );
 }
 
-function AppRoutes({ socket, onRequest, addToast }) {
+function AppRoutes({ socket, onRequest, addToast, data }) {
   const navigate = useNavigate();
 
-  const handlePostRide = useCallback(async (data) => {
+  const handlePostRide = useCallback(async (payload) => {
     try {
-      await api("/api/rides", { method: "POST", body: JSON.stringify(data) });
+      await api("/api/rides", { method: "POST", body: JSON.stringify(payload) });
       addToast("Ride posted! Badgers can now find you.");
+      data.refreshRides();
+      data.refreshMyRides();
       navigate("/my-rides");
     } catch (err) {
       addToast(err.message, "error");
     }
-  }, [addToast, navigate]);
+  }, [addToast, navigate, data]);
 
   return (
     <Routes>
-      <Route path="/" element={<BrowseRides onRequest={onRequest} />} />
+      <Route path="/" element={
+        <BrowseRides
+          rides={data.rides}
+          loading={data.ridesLoading}
+          onRequest={onRequest}
+        />
+      } />
       <Route path="/post" element={<PostRide onPost={handlePostRide} />} />
-      <Route path="/my-rides" element={<MyRides />} />
-      <Route path="/messages" element={<Messages socket={socket} />} />
+      <Route path="/my-rides" element={
+        <MyRides
+          posted={data.myDriving}
+          joined={data.myRiding}
+          loading={data.myRidesLoading}
+        />
+      } />
+      <Route path="/messages" element={
+        <Messages
+          socket={socket}
+          conversations={data.conversations}
+          setConversations={data.setConversations}
+        />
+      } />
       <Route path="/match" element={<Matching onRequest={onRequest} />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

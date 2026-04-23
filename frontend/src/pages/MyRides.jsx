@@ -1,22 +1,12 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import Badge from "react-bootstrap/Badge";
 import Spinner from "react-bootstrap/Spinner";
 import { UserContext } from "../contexts";
-import { api } from "../utils/api";
 import { formatDate, formatTime, getSeatsLeft } from "../utils/format";
 import Avatar from "../components/Avatar";
 
-export default function MyRides() {
+export default function MyRides({ posted, joined, loading }) {
   const user = useContext(UserContext);
-  const [posted, setPosted] = useState([]);
-  const [joined, setJoined] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    Promise.all([api("/api/rides/mine/driving"), api("/api/rides/mine/riding")])
-      .then(([d, r]) => { setPosted(d.rides); setJoined(r.rides); })
-      .finally(() => setLoading(false));
-  }, []);
 
   const StatusBadge = ({ ride }) => {
     if (ride.status === "full" || getSeatsLeft(ride) <= 0) return <Badge className="px-2.5 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-surface-hover text-text-tertiary border border-border-subtle">Full</Badge>;

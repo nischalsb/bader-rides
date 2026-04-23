@@ -6,9 +6,8 @@ import { api } from "../utils/api";
 import { formatTimestamp } from "../utils/format";
 import Avatar from "../components/Avatar";
 
-export default function Messages({ socket }) {
+export default function Messages({ socket, conversations, setConversations }) {
   const user = useContext(UserContext);
-  const [conversations, setConversations] = useState([]);
   const [activeConvo, setActiveConvo] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -16,11 +15,8 @@ export default function Messages({ socket }) {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    api("/api/conversations").then((d) => {
-      setConversations(d.conversations);
-      if (d.conversations.length > 0 && !activeConvo) setActiveConvo(d.conversations[0].id);
-    });
-  }, []);
+    if (conversations.length > 0 && !activeConvo) setActiveConvo(conversations[0].id);
+  }, [conversations, activeConvo]);
 
   useEffect(() => {
     if (!activeConvo) return;
