@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { api } from "../utils/api";
 import BackgroundOrbs from "../components/BackgroundOrbs";
+import PasswordInput from "../components/PasswordInput";
 
 export default function AuthPage({ onAuth, addToast }) {
   const [mode, setMode] = useState("login");
@@ -68,7 +69,14 @@ export default function AuthPage({ onAuth, addToast }) {
           </Form.Group>
           <Form.Group>
             <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">Password</Form.Label>
-            <Form.Control type="password" value={form.password} onChange={set("password")} required placeholder="••••••••" minLength={6} className="px-4 py-3 rounded-xl text-sm input-dark border-0" />
+            <PasswordInput
+              value={form.password}
+              onChange={set("password")}
+              required
+              placeholder="••••••••"
+              minLength={6}
+              autoComplete={mode === "login" ? "current-password" : "new-password"}
+            />
             {mode === "login" && (
               <div className="text-right mt-2">
                 <Link to="/forgot-password" className="text-xs text-cardinal hover:underline">

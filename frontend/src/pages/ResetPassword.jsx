@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { api } from "../utils/api";
 import BackgroundOrbs from "../components/BackgroundOrbs";
+import PasswordInput from "../components/PasswordInput";
 
 export default function ResetPassword({ addToast }) {
   const [searchParams] = useSearchParams();
@@ -72,14 +73,13 @@ export default function ResetPassword({ addToast }) {
             <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">
               New password
             </Form.Label>
-            <Form.Control
-              type="password"
+            <PasswordInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
               placeholder="••••••••"
-              className="px-4 py-3 rounded-xl text-sm input-dark border-0"
+              autoComplete="new-password"
             />
           </Form.Group>
 
@@ -87,14 +87,13 @@ export default function ResetPassword({ addToast }) {
             <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">
               Confirm password
             </Form.Label>
-            <Form.Control
-              type="password"
+            <PasswordInput
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               required
               minLength={6}
               placeholder="••••••••"
-              className="px-4 py-3 rounded-xl text-sm input-dark border-0"
+              autoComplete="new-password"
             />
           </Form.Group>
 
