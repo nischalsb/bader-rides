@@ -1,5 +1,3 @@
-import prisma from "../prismaClient.js";
-
 function avatarFromName(name) {
   return name
     .split(" ")
@@ -9,15 +7,20 @@ function avatarFromName(name) {
     .slice(0, 2);
 }
 
-export async function enrichRide(ride) {
-  const takenSeats = await prisma.rideRequest.count({
-    where: { rideId: ride.id, status: "confirmed" },
-  });
-
-  const requests = await prisma.rideRequest.findMany({
-    where: { rideId: ride.id, status: "confirmed" },
+// Include shape callers should use on `prisma.ride.findMany/findUnique` so
+// enrichRide can shape the response without issuing extra queries (avoids N+1).
+export const rideIncludes = {
+  driver: { select: { name: true, avatar: true } },
+  rideRequests: {
+    where: { status: "confirmed" },
     select: { userId: true },
-  });
+  },
+};
+
+// Synchronous: expects `ride` to have been fetched with `rideIncludes`.
+export function enrichRide(ride) {
+  const confirmed = ride.rideRequests ?? [];
+  const takenSeats = confirmed.length;
 
   return {
     id: ride.id,
@@ -34,11 +37,11 @@ export async function enrichRide(ride) {
     notes: ride.notes,
     venmo: ride.venmo,
     status: takenSeats >= ride.totalSeats ? "full" : ride.status,
-    riders: requests.map((r) => r.userId),
+    riders: confirmed.map((r) => r.userId),
     createdAt: ride.createdAt,
   };
 }
 
-export async function enrichMany(rides) {
-  return Promise.all(rides.map(enrichRide));
+export function enrichMany(rides) {
+  return rides.map(enrichRide);
 }

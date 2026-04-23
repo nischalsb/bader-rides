@@ -1,8 +1,6 @@
 import prisma from "../prismaClient.js";
-import { enrichRide, enrichMany } from "../services/rideService.js";
+import { enrichRide, enrichMany, rideIncludes } from "../services/rideService.js";
 import { findMatches } from "../services/matchingService.js";
-
-const driverSelect = { select: { name: true, avatar: true } };
 
 export async function listRides(req, res, next) {
   try {
@@ -22,11 +20,11 @@ export async function listRides(req, res, next) {
 
     const rides = await prisma.ride.findMany({
       where,
-      include: { driver: driverSelect },
+      include: rideIncludes,
       orderBy: [{ date: "asc" }, { time: "asc" }],
     });
 
-    let results = await enrichMany(rides);
+    let results = enrichMany(rides);
 
     if (minSeats) {
       const min = Number(minSeats);
@@ -53,11 +51,11 @@ export async function getRide(req, res, next) {
   try {
     const ride = await prisma.ride.findUnique({
       where: { id: req.params.id },
-      include: { driver: driverSelect },
+      include: rideIncludes,
     });
     if (!ride) return res.status(404).json({ error: "Ride not found" });
 
-    res.json({ ride: await enrichRide(ride) });
+    res.json({ ride: enrichRide(ride) });
   } catch (err) {
     next(err);
   }
@@ -79,10 +77,10 @@ export async function createRide(req, res, next) {
         notes: notes || "",
         venmo: venmo || "",
       },
-      include: { driver: driverSelect },
+      include: rideIncludes,
     });
 
-    res.status(201).json({ ride: await enrichRide(ride) });
+    res.status(201).json({ ride: enrichRide(ride) });
   } catch (err) {
     next(err);
   }
@@ -210,10 +208,10 @@ export async function myDriving(req, res, next) {
   try {
     const rides = await prisma.ride.findMany({
       where: { driverId: req.userId, status: { not: "cancelled" } },
-      include: { driver: driverSelect },
+      include: rideIncludes,
       orderBy: { date: "asc" },
     });
-    res.json({ rides: await enrichMany(rides) });
+    res.json({ rides: enrichMany(rides) });
   } catch (err) {
     next(err);
   }
@@ -231,11 +229,11 @@ export async function myRiding(req, res, next) {
         id: { in: requests.map((r) => r.rideId) },
         status: { not: "cancelled" },
       },
-      include: { driver: driverSelect },
+      include: rideIncludes,
       orderBy: { date: "asc" },
     });
 
-    res.json({ rides: await enrichMany(rides) });
+    res.json({ rides: enrichMany(rides) });
   } catch (err) {
     next(err);
   }
