@@ -1,29 +1,61 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { getSeatsLeft } from "../utils/format";
-import { DESTINATIONS } from "../utils/constants";
+import { DESTINATIONS, DESTINATION_ALIASES } from "../utils/constants";
 import RideCard from "../components/RideCard";
+
+// Build one lowercase haystack per ride that covers every field we want to
+// search against, plus any destination aliases (e.g. "chicago" for ORD/MDW).
+function buildHaystack(ride) {
+  return [
+    ride.destination,
+    ride.driver || "",
+    ride.pickup,
+    ride.notes || "",
+    (DESTINATION_ALIASES[ride.destination] || []).join(" "),
+  ]
+    .join(" ")
+    .toLowerCase();
+}
 
 export default function BrowseRides({ rides, loading, onRequest }) {
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [destFilter, setDestFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [seatsFilter, setSeatsFilter] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
 
-  const filtered = rides.filter((r) => {
-    if (destFilter && r.destination !== destFilter) return false;
-    if (dateFilter && r.date !== dateFilter) return false;
-    if (seatsFilter > 0 && getSeatsLeft(r) < seatsFilter) return false;
-    if (search) {
-      const q = search.toLowerCase();
-      return r.destination.toLowerCase().includes(q) || (r.driver || "").toLowerCase().includes(q) || r.pickup.toLowerCase().includes(q);
-    }
-    return true;
-  });
-  const openRides = rides.filter((r) => getSeatsLeft(r) > 0).length;
+  // Debounce the text query so rapid typing doesn't re-filter on every keystroke.
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search.trim().toLowerCase()), 150);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  // Precompute haystacks only when `rides` changes, not on every keystroke.
+  const ridesIndexed = useMemo(
+    () => rides.map((r) => ({ ride: r, haystack: buildHaystack(r) })),
+    [rides]
+  );
+
+  const filtered = useMemo(() => {
+    return ridesIndexed
+      .filter(({ ride, haystack }) => {
+        if (destFilter && ride.destination !== destFilter) return false;
+        if (dateFilter && ride.date !== dateFilter) return false;
+        if (seatsFilter > 0 && getSeatsLeft(ride) < seatsFilter) return false;
+        if (debouncedSearch && !haystack.includes(debouncedSearch)) return false;
+        return true;
+      })
+      .map((x) => x.ride);
+  }, [ridesIndexed, debouncedSearch, destFilter, dateFilter, seatsFilter]);
+
+  const openRides = useMemo(
+    () => rides.filter((r) => getSeatsLeft(r) > 0).length,
+    [rides]
+  );
 
   return (
     <div className="fade-in">
