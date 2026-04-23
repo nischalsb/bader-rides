@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { api } from "../utils/api";
+import { YEAR_OPTIONS } from "../utils/constants";
 import BackgroundOrbs from "../components/BackgroundOrbs";
 import PasswordInput from "../components/PasswordInput";
 
@@ -89,7 +90,7 @@ export default function AuthPage({ onAuth, addToast }) {
             <Form.Group>
               <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">Year</Form.Label>
               <Form.Select value={form.year} onChange={set("year")} className="px-4 py-3 rounded-xl text-sm input-dark border-0">
-                {["Freshman", "Sophomore", "Junior", "Senior"].map((y) => <option key={y} value={y}>{y}</option>)}
+                {YEAR_OPTIONS.map((y) => <option key={y.value} value={y.value}>{y.label}</option>)}
               </Form.Select>
             </Form.Group>
           )}

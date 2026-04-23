@@ -1,3 +1,16 @@
+// Stored as the enum value; display uses the label.
+export const YEAR_OPTIONS = [
+  { value: "Freshman", label: "Freshman" },
+  { value: "Sophomore", label: "Sophomore" },
+  { value: "Junior", label: "Junior" },
+  { value: "Senior", label: "Senior" },
+  { value: "Faculty", label: "Faculty / School Affiliated" },
+];
+
+export const YEAR_LABELS = Object.fromEntries(
+  YEAR_OPTIONS.map((o) => [o.value, o.label])
+);
+
 export const DESTINATIONS = [
   "O'Hare Airport (ORD)", "Midway Airport (MDW)", "Chicago Downtown",
   "Milwaukee", "Minneapolis", "Madison Airport (MSN)", "Green Bay", "Rockford",

@@ -5,6 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import BSNavbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import { AuthContext, UserContext } from "../contexts";
+import { YEAR_LABELS } from "../utils/constants";
 import Avatar from "./Avatar";
 
 const tabs = [
@@ -39,7 +40,7 @@ export default function AppNavbar() {
           <div className="hidden md:flex items-center gap-3">
             <div className="text-right mr-1">
               <div className="text-sm font-medium text-text-primary">{user?.name?.split(" ")[0]}</div>
-              <div className="text-[10px] text-text-tertiary uppercase tracking-wide">{user?.year}</div>
+              <div className="text-[10px] text-text-tertiary uppercase tracking-wide">{YEAR_LABELS[user?.year] || user?.year}</div>
             </div>
             <Avatar initials={user?.avatar || "?"} size="sm" glow />
             <Button variant="link" onClick={logout} className="ml-1 text-text-tertiary hover:text-cardinal-light p-0" title="Sign out">

@@ -12,6 +12,7 @@ enum Year {
   Sophomore
   Junior
   Senior
+  Faculty
 }
 
 enum RideStatus {
