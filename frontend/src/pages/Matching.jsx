@@ -30,13 +30,13 @@ export default function Matching({ onRequest }) {
       <div className="mb-8 text-center"><h1 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-text-primary">find your <span className="text-gradient">perfect match</span></h1><p className="text-text-secondary mt-2 text-lg">Tell us where and when. We&apos;ll do the rest.</p></div>
       <Form onSubmit={findMatches} className="glass rounded-3xl p-6 md:p-8 mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
-          <Form.Group>
+          <Form.Group controlId="match-destination">
             <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">Where to?</Form.Label>
             <Form.Select value={dest} onChange={(e) => setDest(e.target.value)} required className="px-4 py-3 rounded-xl text-sm input-dark border-0">
               <option value="">Select destination...</option>{DESTINATIONS.map((d) => <option key={d} value={d}>{d}</option>)}
             </Form.Select>
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="match-date">
             <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">When?</Form.Label>
             <Form.Control type="date" value={date} onChange={(e) => setDate(e.target.value)} required className="px-4 py-3 rounded-xl text-sm input-dark border-0" />
           </Form.Group>
@@ -57,7 +57,7 @@ export default function Matching({ onRequest }) {
                   {i === 0 && <Badge className="absolute -top-2 right-4 z-10 px-3 py-1 bg-gradient-to-r from-accent-yellow to-accent-warm text-black text-[10px] font-bold uppercase tracking-wider rounded-full shadow-lg shadow-accent-yellow/20">Best match</Badge>}
                   <div className={`glass rounded-2xl p-5 ${i === 0 ? "ring-1 ring-accent-yellow/30 shadow-[0_0_40px_rgba(255,214,10,0.06)]" : ""}`}>
                     <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3"><Avatar initials={r.avatar} glow={i === 0} /><div><h3 className="font-semibold text-text-primary">{r.driver}</h3><p className="text-xs text-text-tertiary">{r.pickup}</p></div></div>
+                      <div className="flex items-center gap-3"><Avatar initials={r.avatar} glow={i === 0} /><div><p className="font-semibold text-text-primary">{r.driver}</p><p className="text-xs text-text-tertiary">{r.pickup}</p></div></div>
                       <div className="text-right"><div className={`text-3xl font-bold font-display ${i === 0 ? "text-gradient" : "text-cardinal-light"}`}>{r.score}</div><div className="text-[10px] uppercase tracking-widest text-text-tertiary">score</div></div>
                     </div>
                     <div className="flex flex-wrap gap-2 mb-4">

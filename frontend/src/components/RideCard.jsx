@@ -18,7 +18,7 @@ export default function RideCard({ ride, onRequest, index = 0 }) {
         <div className="flex items-center gap-3">
           <Avatar initials={ride.avatar} />
           <div>
-            <h3 className="font-semibold text-text-primary text-[15px]">{ride.driver}</h3>
+            <p className="font-semibold text-text-primary text-[15px]">{ride.driver}</p>
             <p className="text-xs text-text-tertiary mt-0.5">{ride.pickup}</p>
           </div>
         </div>

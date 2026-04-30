@@ -69,7 +69,7 @@ export default function ResetPassword({ addToast }) {
         </div>
 
         <Form onSubmit={handleSubmit} className="glass rounded-3xl p-6 md:p-8 space-y-5">
-          <Form.Group>
+          <Form.Group controlId="reset-password">
             <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">
               New password
             </Form.Label>
@@ -83,7 +83,7 @@ export default function ResetPassword({ addToast }) {
             />
           </Form.Group>
 
-          <Form.Group>
+          <Form.Group controlId="reset-confirm">
             <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">
               Confirm password
             </Form.Label>

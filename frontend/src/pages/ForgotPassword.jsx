@@ -61,7 +61,7 @@ export default function ForgotPassword() {
             </div>
           ) : (
             <Form onSubmit={handleSubmit} className="space-y-5">
-              <Form.Group>
+              <Form.Group controlId="forgot-email">
                 <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">
                   Email
                 </Form.Label>

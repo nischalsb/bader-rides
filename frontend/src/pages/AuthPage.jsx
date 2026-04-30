@@ -59,16 +59,16 @@ export default function AuthPage({ onAuth, addToast }) {
           </div>
 
           {mode === "register" && (
-            <Form.Group>
+            <Form.Group controlId="auth-name">
               <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">Name</Form.Label>
               <Form.Control type="text" value={form.name} onChange={set("name")} required placeholder="Your full name" className="px-4 py-3 rounded-xl text-sm input-dark border-0" />
             </Form.Group>
           )}
-          <Form.Group>
+          <Form.Group controlId="auth-email">
             <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">Email</Form.Label>
             <Form.Control type="email" value={form.email} onChange={set("email")} required placeholder="you@wisc.edu" className="px-4 py-3 rounded-xl text-sm input-dark border-0" />
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="auth-password">
             <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">Password</Form.Label>
             <PasswordInput
               value={form.password}
@@ -87,7 +87,7 @@ export default function AuthPage({ onAuth, addToast }) {
             )}
           </Form.Group>
           {mode === "register" && (
-            <Form.Group>
+            <Form.Group controlId="auth-year">
               <Form.Label className="text-[10px] uppercase tracking-widest text-text-tertiary mb-2 font-medium">Year</Form.Label>
               <Form.Select value={form.year} onChange={set("year")} className="px-4 py-3 rounded-xl text-sm input-dark border-0">
                 {YEAR_OPTIONS.map((y) => <option key={y.value} value={y.value}>{y.label}</option>)}
